@@ -105,12 +105,12 @@ local function UIRequire(module)
 		return math.floor(screenWidth / 2 - width / 2)
 	end
 	
-	local title, width, total = "MineOS", 26, 14
+	local title, width, total = "MineOsForked", 26, 14
 	local x, y, part = centrize(width), math.floor(screenHeight / 2 - 1), math.ceil(width * UIRequireCounter / UIRequireTotal)
 	UIRequireCounter = UIRequireCounter + 1
 	
 	-- Title
-	GPUProxy.setForeground(0x2D2D2D)
+	GPUProxy.setForeground(0xFF6347)
 	GPUProxy.set(centrize(#title), y, title)
 
 	-- Progressbar
@@ -123,7 +123,7 @@ local function UIRequire(module)
 end
 
 -- Preparing screen for loading libraries
-GPUProxy.setBackground(0xE1E1E1)
+GPUProxy.setBackground(0xD2691E)
 GPUProxy.fill(1, 1, screenWidth, screenHeight, " ")
 
 -- Loading libraries
