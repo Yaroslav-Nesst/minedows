@@ -82,7 +82,7 @@ local boot, menuBack, menu, input =
 	function(proxy)
 		for i = 1, #OSList do
 			if proxy.exists(OSList[i][1]) then
-				status(stringsMain, "Booting from " .. (proxy.getLabel() or proxy.address))
+				status(stringsMain, "Booting from... " .. (proxy.getLabel() or proxy.address))
 
 				-- Updating current EEPROM boot address if it's differs from given proxy address
 				if eepromGetData() ~= proxy.address then
@@ -109,7 +109,7 @@ local boot, menuBack, menu, input =
 		end
 	end,
 	function(f)
-		return menuElement("Back", f, 1)
+		return menuElement("Exit recovery", f, 1)
 	end,
 	function(titleText, elements)
 		local selectedElement, maxLength = 1, 0
@@ -184,14 +184,14 @@ local boot, menuBack, menu, input =
 		end
 	end
 
-status(stringsMain, "Hold Alt to show boot options")
+status(stringsMain, "Press ALT to enter recovery!")
 
 local deadline, eventData = uptime() + 1
 while uptime() < deadline do
 	eventData = {pullSignal(deadline - uptime())}
 	if eventData[1] == stringKeyDown and eventData[4] == 56 then
 		local utilities = {
-			menuElement("Disk management", function()
+			menuElement("Partitions manager", function()
 				local restrict, filesystems, filesystemOptions =
 					function(text, limit)
 						if #text < limit then
@@ -212,7 +212,7 @@ while uptime() < deadline do
 					for address in componentList(stringsFilesystem) do
 						local proxy = componentProxy(address)
 						local label, isReadOnly, filesystemOptions =
-							proxy.getLabel() or "Unnamed",
+							proxy.getLabel() or "noname",
 							proxy.isReadOnly(),
 							{
 								menuElement("Set as bootable", function()
@@ -227,8 +227,8 @@ while uptime() < deadline do
 								updateFilesystems()
 							end, 1))
 
-							tableInsert(filesystemOptions, menuElement("Format", function()
-								status(stringsMain, "Formatting filesystem " .. address)
+							tableInsert(filesystemOptions, menuElement("Format Tool", function()
+								status(stringsMain, "Formatting drive " .. address)
 								
 								for _, file in ipairs(proxy.list("/")) do
 									proxy.remove(file)
@@ -257,7 +257,7 @@ while uptime() < deadline do
 				end
 
 				updateFilesystems()
-				menu("Select filesystem", filesystems)
+				menu("Select partition", filesystems)
 			end),
 			
 			menuElement("Shutdown", function()
@@ -268,11 +268,11 @@ while uptime() < deadline do
 		}
 
 		if internetAddress then	
-			tableInsert(utilities, 2, menuElement("Internet recovery", function()
-				local handle, data, result, reason = componentProxy(internetAddress).request("https://raw.githubusercontent.com/IgorTimofeev/MineOS/master/Installer/Main.lua"), ""
+			tableInsert(utilities, 2, menuElement("System recovery", function()
+				local handle, data, result, reason = componentProxy(internetAddress).request("https://raw.githubusercontent.com/Yaroslav-Nesst/MineOsForked/master/Installer/Main.lua"), ""
 
 				if handle then
-					status(stringsMain, "Downloading recovery script")
+					status(stringsMain, "Running recovery script...")
 
 					while 1 do
 						result, reason = handle.read(mathHuge)	
@@ -292,7 +292,7 @@ while uptime() < deadline do
 						end
 					end
 				else
-					status(stringsMain, "invalid URL-address", 1)
+					status(stringsMain, "Invalid URL-adress", 1)
 				end
 			end))
 		end
@@ -314,7 +314,7 @@ if not (proxy and boot(proxy)) then
 	end
 
 	if not proxy then
-		status(stringsMain, "No bootable mediums found", 1)
+		status(stringsMain, "No os/init.lua found :( Lox, proyebal sistemy", 1)
 	end
 end
 
