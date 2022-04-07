@@ -1,5 +1,5 @@
 
-English | [中文(简体)](https://github.com/IgorTimofeev/MineOS/blob/master/README-zh_CN.md) | [Русский](https://github.com/IgorTimofeev/MineOS/blob/master/README-ru_RU.md)
+English | [中文(简体)](https://github.com/Yaroslav-Nesst/MineOsForked/blob/master/README-zh_CN.md) | [Русский](https://github.com/Yaroslav-Nesst/MineOsForked/blob/master/README-ru_RU.md)
 
 ## MineOS GANDAlone has released!
 
