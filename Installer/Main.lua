@@ -141,7 +141,7 @@ local function deserialize(text)
 end
 
 -- Clearing screen
-GPUProxy.setBackground(0xE1E1E1)
+GPUProxy.setBackground(0xFF6347)
 GPUProxy.fill(1, 1, screenWidth, screenHeight, " ")
 
 -- Searching for appropriate temporary filesystem for storing libraries, images, etc
