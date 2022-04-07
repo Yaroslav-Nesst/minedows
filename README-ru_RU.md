@@ -1,6 +1,6 @@
-[English](https://github.com/IgorTimofeev/MineOS/blob/master/README.md) | [中文(简体)](https://github.com/IgorTimofeev/MineOS/blob/master/README-zh_CN.md) | Русский
+[English](https://github.com/Yaroslav-Nesst/MineOsForked/blob/master/README.md) | [中文(简体)](https://github.com/Yaroslav-Nesst/MineOsForked/blob/master/README-zh_CN.md) | Русский
 
-## MineOS Standalone вышла в релиз!
+## MineOS GANDAlone вышла в релиз!
 
 Привет, дорогой друг. Спасибо, что ты был с нами и поддерживал наш проект на протяжении всего длительного цикла разработки. MineOS наконец-то достигла стадии релиза и стала полностью независимой ОС с собственным API для разработчиков и замечательной [иллюстрированной вики](https://github.com/IgorTimofeev/MineOS/wiki). MineOS - это графическая операционная система для мода Open Computers в игре Minecraft. Она обладает широкими возможностями по кастомизации, а также собственным магазином приложений для публикации ваших творений среди других пользователей ОС. Основные возможности:
 
@@ -25,7 +25,7 @@
 
 Для вставки команды можно использовать среднюю кнопку мыши или клавишу Insert (по умолчанию). Если по какой-то причине метод через pastebin недоступен для вас (например, он заблокирован на игровом сервере или интернет-провайдером), воспользуйтесь альтернативной командой, чтобы скачать установщик прямо со страницы GitHub:
 
-	wget -f https://raw.githubusercontent.com/IgorTimofeev/MineOS/master/Installer/BIOS.lua /tmp/bios.lua && flash -q /tmp/bios.lua && reboot
+	wget -f https://raw.githubusercontent.com/Yaroslav-Nesst/MineOsForked/master/Installer/BIOS.lua /tmp/bios.lua && flash -q /tmp/bios.lua && reboot
 
 Спустя некоторое время запустится симпатичный инсталллер, где вам предложат выбрать предпочитаемый язык, загрузочный диск (можно отформатировать, если нужно), создать профиль пользователя и настроить несколько параметров под себя.
 
