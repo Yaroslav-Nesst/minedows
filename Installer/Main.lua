@@ -17,11 +17,11 @@ local EEPROMProxy, internetProxy, GPUProxy =
 GPUProxy.bind(getComponentAddress("screen"))
 local screenWidth, screenHeight = GPUProxy.getResolution()
 
-local repositoryURL = "https://raw.githubusercontent.com/Yaroslav-Nesst/MineOsForked/master/"
+local repositoryURL = "https://raw.githubusercontent.com/Yaroslav-Nesst/minedows/master/"
 local installerURL = "Installer/"
 local EFIURL = "EFI/Minified.lua"
 
-local installerPath = "/MineOS installer/"
+local installerPath = "/Minedows installer/"
 local installerPicturesPath = installerPath .. "Installer/Pictures/"
 local OSPath = "/"
 
@@ -42,7 +42,7 @@ end
 
 local function title()
 	local y = math.floor(screenHeight / 2 - 1)
-	centrizedText(y, 0xFF6347, "MineOsForked")
+	centrizedText(y, 0xFF6347, "Minedows Installer")
 
 	return y + 2
 end
@@ -235,7 +235,7 @@ window:addChild(GUI.panel(1, 1, window.width, window.height, 0xE1E1E1))
 
 -- Top menu
 local menu = workspace:addChild(GUI.menu(1, 1, workspace.width, 0xF0F0F0, 0xFF6347, 0x3366CC, 0xE1E1E1))
-local installerMenu = menu:addContextMenuItem("MineOsForked Installation", 0x2D2D2D)
+local installerMenu = menu:addContextMenuItem("Minedows Installation", 0x2D2D2D)
 installerMenu:addItem("Shutdown").onTouch = function()
 	computer.shutdown()
 end
@@ -541,7 +541,7 @@ addStage(function()
 
 	-- Renaming if possible
 	if not selectedFilesystemProxy.getLabel() then
-		selectedFilesystemProxy.setLabel("MineOS HDD")
+		selectedFilesystemProxy.setLabel("Minedows System")
 	end
 
 	local function switchProxy(runnable)
