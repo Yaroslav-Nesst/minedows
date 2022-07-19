@@ -269,7 +269,7 @@ while uptime() < deadline do
 
 		if internetAddress then	
 			tableInsert(utilities, 2, menuElement("System recovery", function()
-				local handle, data, result, reason = componentProxy(internetAddress).request("https://raw.githubusercontent.com/Yaroslav-Nesst/MineOsForked/master/Installer/Main.lua"), ""
+				local handle, data, result, reason = componentProxy(internetAddress).request("https://raw.githubusercontent.com/Yaroslav-Nesst/minedows/master/Installer/Main.lua"), ""
 
 				if handle then
 					status(stringsMain, "Running recovery script...")
