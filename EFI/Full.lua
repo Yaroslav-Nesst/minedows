@@ -10,12 +10,12 @@ local shutdown, gpuSet, gpuSetBackground, gpuSetForeground, gpuFill, eepromSetDa
 local OSList, rectangle, centrizedText, menuElement =
 	{
 		{
-			"/OS.lua",
+			"/init.lua",
 			function()
 			end
 		},
 		{
-			"/init.lua",
+			"/OS.lua",
 			function()
 				computer.getBootAddress, computer.setBootAddress = eepromGetData, eepromSetData
 			end
