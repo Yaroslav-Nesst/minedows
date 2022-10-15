@@ -226,7 +226,7 @@ local paths = require("Paths")
 
 -- Creating main UI workspace
 local workspace = GUI.workspace()
-workspace:addChild(GUI.panel(1, 1, workspace.width, workspace.height, 0x1E1E1E))
+workspace:addChild(GUI.panel(1, 1, workspace.width, workspace.height, 906FD0))
 
 -- Main installer window
 local window = workspace:addChild(GUI.window(1, 1, 80, 24))
@@ -235,7 +235,7 @@ window:addChild(GUI.panel(1, 1, window.width, window.height, 0xE1E1E1))
 
 -- Top menu
 local menu = workspace:addChild(GUI.menu(1, 1, workspace.width, 0xF0F0F0, 0xFF6347, 0x3366CC, 0xE1E1E1))
-local installerMenu = menu:addContextMenuItem("Minedows Installation", 0x2D2D2D)
+local installerMenu = menu:addContextMenuItem("Minedows", 0x2D2D2D)
 installerMenu:addItem("Shutdown").onTouch = function()
 	computer.shutdown()
 end
