@@ -45,6 +45,10 @@
 	toDirectory = "to folder",
 	copying = "Copying",
 	faylaBlyad = "file",
+	help = "Help",
+	run = "Run",
+	settings = "Settings",
+	shutdown = "Shutdown",
 
 	areYouSure = "Are you sure?",
 	emptyTrash = "Empty trash",

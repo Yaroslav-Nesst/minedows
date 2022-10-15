@@ -45,6 +45,11 @@
 	toDirectory = "в каталозі",
 	copying = "Копіювання",
 	faylaBlyad = "файла",
+	help = "Допомога",
+	run = "Виповнити",
+	settings = "Налаштування",
+	shutdown = "Вимкнути",
+
 
 	areYouSure = "Ви впевнені?",
 	emptyTrash = "Очистити кошик",
