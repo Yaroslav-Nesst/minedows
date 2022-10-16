@@ -110,20 +110,20 @@ local function UIRequire(module)
 	UIRequireCounter = UIRequireCounter + 1
 	
 	-- Title
-	GPUProxy.setForeground(0x2D2D2D)
+	GPUProxy.setForeground(0xFF6347)
 	GPUProxy.set(centrize(#title), y, title)
 
 	-- Progressbar
-	GPUProxy.setForeground(0x878787)
+	GPUProxy.setForeground(0xD2691E)
 	GPUProxy.set(x, y + 2, string.rep("─", part))
-	GPUProxy.setForeground(0xC3C3C3)
+	GPUProxy.setForeground(0x6B360F)
 	GPUProxy.set(x + part, y + 2, string.rep("─", width - part))
 
 	return require(module)
 end
 
 -- Preparing screen for loading libraries
-GPUProxy.setBackground(0xE1E1E1)
+GPUProxy.setBackground(0x000000)
 GPUProxy.fill(1, 1, screenWidth, screenHeight, " ")
 
 -- Loading libraries
