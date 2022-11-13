@@ -49,6 +49,7 @@
 	run = "Выполнить",
 	settings = "Настройки",
 	shutdown = "Выключить",
+	start = "Пуск",
 
 
 	areYouSure = "Вы уверены?",

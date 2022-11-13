@@ -2403,9 +2403,9 @@ function system.updateDesktop()
 
   desktopWindowsContainer = workspace:addChild(GUI.container(1, 1, 1, 1))
 
-  desktopMenu = workspace:addChild(GUI.menu(1, 1, workspace.width, 0x0, 0x696969, 0x3366CC, 0xFFFFFF))
+  desktopMenu = workspace:addChild(GUI.menu(1, 1, workspace.width, 0x0, 0x38761d, 0x3366CC, 0xFFFFFF))
   
-  local MineOSContextMenu = desktopMenu:addContextMenuItem("Start", 0x000000)
+  local MineOSContextMenu = desktopMenu:addContextMenuItem((localization.start), 0x000000)
 
   MineOSContextMenu:addItem(" ").onTouch = function()
     require("Network").broadcastComputerState(false)

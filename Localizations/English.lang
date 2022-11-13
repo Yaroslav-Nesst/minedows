@@ -49,6 +49,7 @@
 	run = "Run",
 	settings = "Settings",
 	shutdown = "Shutdown",
+	start = "Start",
 
 	areYouSure = "Are you sure?",
 	emptyTrash = "Empty trash",
