@@ -234,16 +234,36 @@ window.localX, window.localY = math.ceil(workspace.width / 2 - window.width / 2)
 window:addChild(GUI.panel(1, 1, window.width, window.height, 0xE1E1E1))
 
 -- Top menu
-local menu = workspace:addChild(GUI.menu(1, 1, workspace.width, 0x38761d, 0x38761d, 0x3366CC, 0x38761d))
+local menu = workspace:addChild(GUI.menu(1, 1, workspace.width, 0xf0f0f0, 0x38761d, 0x3366CC, 0xe1e1e1))
 local installerMenu = menu:addContextMenuItem("Minedows", 0x2D2D2D)
+installerMenu:addItem("").onTouch = function()
+	computer.shutdown()
+end
 installerMenu:addItem("Shutdown").onTouch = function()
 	computer.shutdown()
+end
+installerMenu:addItem("").onTouch = function()
+	computer.shutdown()
+end
+
+installerMenu:addItem("").onTouch = function()
+	computer.shutdown(true)
 end
 installerMenu:addItem("Reboot").onTouch = function()
 	computer.shutdown(true)
 end
+installerMenu:addItem("").onTouch = function()
+	computer.shutdown(true)
+end
+
 installerMenu:addSeparator()
+installerMenu:addItem("").onTouch = function()
+	workspace:stop()
+end
 installerMenu:addItem("Exit").onTouch = function()
+	workspace:stop()
+end
+installerMenu:addItem("").onTouch = function()
 	workspace:stop()
 end
 
