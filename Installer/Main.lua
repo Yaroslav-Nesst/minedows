@@ -235,7 +235,7 @@ window:addChild(GUI.panel(1, 1, window.width, window.height, 0xE1E1E1))
 
 -- Top menu
 local menu = workspace:addChild(GUI.menu(1, 1, workspace.width, 0xf0f0f0, 0xf0f0f0, 0x3366CC, 0xe1e1e1))
-local installerMenu = menu:addContextMenuItem("li", 0x2D2D2D)
+local installerMenu = menu:addContextMenuItem("Start", 0x2D2D2D)
 installerMenu:addItem("").onTouch = function()
 	computer.shutdown()
 end
@@ -259,11 +259,11 @@ end
 installerMenu:addSeparator()
 installerMenu:addItem("").onTouch = function()
 end
-installerMenu:addItem("Exitoo").onTouch = function()
-	system.execute("shutdownlist.lua")
+installerMenu:addItem("Exit").onTouch = function()
+	system.execute("lib/shutdownlist.lua")
 end
 installerMenu:addItem("").onTouch = function()
-	system.execute("shutdownlist.lua")
+	system.execute("lib/shutdownlist.lua")
 end
 
 -- Main vertical layout
