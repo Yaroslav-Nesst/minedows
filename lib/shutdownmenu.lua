@@ -1,77 +1,29 @@
-local image = require("Image")
-local GUI = "Temp/lib/GUI.lua"
-local system = require("System")
+local GUI = require("GUI")
 
-------------------------------------------------------------------------------------------
-
-
-
-shutdownf = 0
-rebootf = 0
-logoutf = 0
-chosen  = ("◉")
-notchosen  = ("○")
-modeset = "None"
-
-blanka = ("○")
+--------------------------------------------------------------------------------
 
 local workspace = GUI.workspace()
+workspace:addChild(GUI.panel(1, 1, workspace.width, workspace.height, 0x2D2D2D))
 
-local window, shutdown = workspace:addChild(GUI.titledWindow(50, 22, 60, 15, "Shut Down Minedows", true))
+-- Add a panel that symbolizes the system window, the size of which we will change
+local panel = workspace:addChild(GUI.panel(3, 2, 30, 10, 0xE1E1E1))
+-- Add a resizer, by default located in the right part of the window. Make the width of the resizer at least 3 to handle the drag/drop events in both directions
+local resizer = workspace:addChild(GUI.resizer(panel.localX + panel.width - 2, panel.localY + math.floor(panel.height / 2 - 2), 3, 4, 0xAAAAAA, 0x0))
 
-local layout = window:addChild(GUI.layout(1, 2, shutdown.width, shutdown.height - 1, 1, 1))
-window:addChild(GUI.text(15, 5, 0x000000, "Are you sure you want to:"))
-window:addChild(GUI.text(18, 7, 0x000000, "Shut down the computer?"))
-window:addChild(GUI.text(18, 9, 0x000000, "Restart the computer?"))
-window:addChild(GUI.text(18, 11, 0x000000, "Close all programs and log out from user?"))
-window:addChild(GUI.text(15, 13, 0x000000, "Current mode set:"))
-window:addChild(GUI.text(33, 13, 0x000000, "None"))
-window:addChild(GUI.image(2, 5, image.load("Temp/Installer/Pictures/Pc.pic")))
+-- This function will be called during the "drag" event, when the user moves over the resizer
+resizer.onResize = function(dragWidth, dragHeight)
+	panel.width = panel.width + dragWidth
+	resizer.localX = resizer.localX + dragWidth
 
-
-local shutdownb = window:addChild(GUI.button(15, 7, 1, 1, 0xFFFFFF, 0x555555, 0xC4C4C4, 0xFFFFFF, blanka))
-shutdownb.animated = false
-shutdownb.onTouch = function()
-    window:addChild(GUI.text(33, 13, 0x000000, "        "))
-    window:addChild(GUI.text(33, 13, 0x000000, "Shutdown"))
-    modeset = "Shutdown"
-    workspace:draw()
+	workspace:draw()
 end
 
-local rebootb = window:addChild(GUI.button(15, 9, 1, 1, 0xFFFFFF, 0x555555, 0xC4C4C4, 0xFFFFFF, blanka))
-rebootb.animated = false
-rebootb.onTouch = function()
-    window:addChild(GUI.text(33, 13, 0x000000, "        "))
-    window:addChild(GUI.text(33, 13, 0x000000, "Reboot"))
-    modeset = "Reboot"
-    workspace:draw()
+-- This function will be called on "drop" event
+resizer.onResizeFinished = function()
+	GUI.alert("Resize finished!")
 end
 
-local logoutb = window:addChild(GUI.button(15, 11, 1, 1, 0xFFFFFF, 0x555555, 0xC4C4C4, 0xFFFFFF, blanka))
-logoutb.animated = false
-logoutb.onTouch = function()
-    window:addChild(GUI.text(33, 13, 0x000000, "        "))
-    window:addChild(GUI.text(33, 13, 0x000000, "Logout"))
-    workspace:draw()
-    modeset = "Logout"
-end
-
-local okay = window:addChild(GUI.button(44, 13, 5, 1, 0xFFFFFF, 0x555555, 0xC4C4C4, 0xFFFFFF, "OK"))
-okay.animated = false
-okay.onTouch = function()
-  if modeset == "Shutdown" then
-  	computer.shutdown()
-  elseif modeset == "Reboot" then
-	computer.shutdown(true)
-    elseif modeset == "Logout" then
-	system.authorize()
-  end
-
-end
-
-------------------------------------------------------------------------------------------
-
-
+--------------------------------------------------------------------------------
 
 workspace:draw()
 workspace:start()
