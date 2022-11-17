@@ -3,26 +3,12 @@ local GUI = require("GUI")
 --------------------------------------------------------------------------------
 
 local workspace = GUI.workspace()
-workspace:addChild(GUI.panel(1, 1, workspace.width, workspace.height, 0x2D2D2D))
-
--- Add a panel that symbolizes the system window, the size of which we will change
-local panel = workspace:addChild(GUI.panel(3, 2, 30, 10, 0xE1E1E1))
--- Add a resizer, by default located in the right part of the window. Make the width of the resizer at least 3 to handle the drag/drop events in both directions
-local resizer = workspace:addChild(GUI.resizer(panel.localX + panel.width - 2, panel.localY + math.floor(panel.height / 2 - 2), 3, 4, 0xAAAAAA, 0x0))
-
--- This function will be called during the "drag" event, when the user moves over the resizer
-resizer.onResize = function(dragWidth, dragHeight)
-	panel.width = panel.width + dragWidth
-	resizer.localX = resizer.localX + dragWidth
-
-	workspace:draw()
-end
-
--- This function will be called on "drop" event
-resizer.onResizeFinished = function()
-	GUI.alert("Resize finished!")
-end
-
+local window3 = workspace:addChild(GUI.titledWindow(50, 22, 60, 20, "Titled window example", true))
+-- Attach an single cell layout to it
+local layout = window3:addChild(GUI.layout(1, 2, window3.width, window3.height - 1, 1, 1))
+-- Add some stuff to layout
+layout:addChild(GUI.button(1, 1, 36, 3, 0xB4B4B4, 0xFFFFFF, 0x969696, 0xB4B4B4, "Press me"))
+layout:addChild(GUI.button(1, 1, 36, 3, 0xB4B4B4, 0xFFFFFF, 0x969696, 0xB4B4B4, "And me"))
 --------------------------------------------------------------------------------
 
 workspace:draw()
