@@ -21,8 +21,8 @@ local repositoryURL = "https://raw.githubusercontent.com/Yaroslav-Nesst/minedows
 local installerURL = "Installer/"
 local EFIURL = "EFI/Minified.lua"
 
-local installerPath = "/Minedows installer/"
-local installerPicturesPath = installerPath .. "Installer/Pictures/"
+local installerPath = "/Temp/"
+local installerPicturesPath = installerPath .. "Temp/Pictures/"
 local OSPath = "/"
 
 local temporaryFilesystemProxy, selectedFilesystemProxy
@@ -260,10 +260,10 @@ installerMenu:addSeparator()
 installerMenu:addItem("").onTouch = function()
 end
 installerMenu:addItem("Exit").onTouch = function()
-	system.execute("/lib/shutdownlist.lua")
+	system.execute("Temp/lib/shutdownlist.lua")
 end
 installerMenu:addItem("").onTouch = function()
-	system.execute("/lib/shutdownlist.lua")
+	system.execute("Temp/lib/shutdownlist.lua")
 end
 
 -- Main vertical layout
