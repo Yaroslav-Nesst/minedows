@@ -1,5 +1,5 @@
 local image = require("Image")
-local GUI = require("GUI")
+local GUI = "Temp/lib/GUI.lua"
 local system = require("System")
 
 ------------------------------------------------------------------------------------------
