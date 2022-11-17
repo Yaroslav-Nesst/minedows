@@ -22,7 +22,7 @@ local installerURL = "Installer/"
 local EFIURL = "EFI/Minified.lua"
 
 local installerPath = "/Temp/"
-local installerPicturesPath = installerPath .. "Temp/Pictures/"
+local installerPicturesPath = installerPath .. "Installer/Pictures/"
 local OSPath = "/"
 
 local temporaryFilesystemProxy, selectedFilesystemProxy
