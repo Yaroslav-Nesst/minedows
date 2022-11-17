@@ -13,7 +13,6 @@ layout:addChild(GUI.text(18, 9, 0x000000, "Restart the computer?"))
 layout:addChild(GUI.text(18, 11, 0x000000, "Close all programs and log out from user?"))
 layout:addChild(GUI.text(15, 13, 0x000000, "Current mode set:"))
 layout:addChild(GUI.text(33, 13, 0x000000, "None"))
-layout:addChild(GUI.image(2, 5, image.load("/Temp/Installer/Pictures/Pc.pic")))
 --------------------------------------------------------------------------------
 
 workspace:draw()
