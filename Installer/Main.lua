@@ -261,10 +261,10 @@ installerMenu:addSeparator()
 installerMenu:addItem("").onTouch = function()
 end
 installerMenu:addItem("Exit").onTouch = function()
-	system.execute("Temp/lib/shutdownlist.lua")
+	system.execute("Temp/lib/shutdownmenu.lua")
 end
 installerMenu:addItem("").onTouch = function()
-	system.execute("Temp/lib/shutdownlist.lua")
+	system.execute("Temp/lib/shutdownmenu.lua")
 end
 
 -- Main vertical layout
