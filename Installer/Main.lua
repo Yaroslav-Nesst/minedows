@@ -259,7 +259,7 @@ end
 installerMenu:addSeparator()
 installerMenu:addItem("").onTouch = function()
 end
-installerMenu:addItem("Exit").onTouch = function()
+installerMenu:addItem("Exitoo").onTouch = function()
 	system.execute("/lib/shutdownlist.lua")
 end
 installerMenu:addItem("").onTouch = function()
