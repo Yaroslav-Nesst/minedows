@@ -15,6 +15,8 @@ modeset = "None"
 
 blanka = ("○")
 
+local workspace = GUI.workspace()
+
 local window3 = workspace:addChild(GUI.titledWindow(50, 22, 60, 20, "Titled window example", true))
 -- Attach an single cell layout to it
 --local layout = window3:addChild(GUI.layout(1, 2, window3.width, window3.height - 1, 1, 1))
