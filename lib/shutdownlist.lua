@@ -15,16 +15,16 @@ modeset = "None"
 
 blanka = ("○")
 
-local workspace, shutdown, menu = system.addWindow(GUI.titledWindow(50, 22, 60, 15, "Shut Down Minedows", true))
+local workspace = GUI.workspace()
 
-local layout = shutdown:addChild(GUI.layout(1, 2, shutdown.width, shutdown.height - 1, 1, 1))
+local shutdown = workspace:addChild(GUI.titledWindow(50, 22, 60, 20, "Shut Down Minedows", true))
 shutdown:addChild(GUI.text(15, 5, 0x000000, "Are you sure you want to:"))
 shutdown:addChild(GUI.text(18, 7, 0x000000, "Shut down the computer?"))
 shutdown:addChild(GUI.text(18, 9, 0x000000, "Restart the computer?"))
 shutdown:addChild(GUI.text(18, 11, 0x000000, "Close all programs and log out from user?"))
 shutdown:addChild(GUI.text(15, 13, 0x000000, "Current mode set:"))
 shutdown:addChild(GUI.text(33, 13, 0x000000, "None"))
-shutdown:addChild(GUI.image(2, 5, image.load("/Icons/pc.pic")))
+shutdown:addChild(GUI.image(2, 5, image.load("Icons/Pc.pic")))
 
 
 local shutdownb = shutdown:addChild(GUI.button(15, 7, 1, 1, 0xFFFFFF, 0x555555, 0xC4C4C4, 0xFFFFFF, blanka))
