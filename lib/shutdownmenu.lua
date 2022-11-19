@@ -8,7 +8,6 @@ local system = require("System")
 
 shutdownf = 0
 rebootf = 0
-logoutf = 0
 chosen  = ("◉")
 notchosen  = ("○")
 modeset = "None"
@@ -21,7 +20,6 @@ local shutdown = workspace:addChild(GUI.titledWindow(50, 22, 60, 15, "Shut Down 
 shutdown:addChild(GUI.text(15, 5, 0x000000, "Are you sure you want to:"))
 shutdown:addChild(GUI.text(18, 7, 0x000000, "Shut down the computer?"))
 shutdown:addChild(GUI.text(18, 9, 0x000000, "Restart the computer?"))
-shutdown:addChild(GUI.text(18, 11, 0x000000, "Close all programs and log out from user?"))
 shutdown:addChild(GUI.text(15, 13, 0x000000, "Current mode set:"))
 shutdown:addChild(GUI.text(33, 13, 0x000000, "None"))
 shutdown:addChild(GUI.image(2, 5, image.load("Temp/Installer/Pictures/Pc.pic")))
@@ -43,15 +41,6 @@ rebootb.onTouch = function()
     shutdown:addChild(GUI.text(33, 13, 0x000000, "Reboot"))
     modeset = "Reboot"
     workspace:draw()
-end
-
-local logoutb = shutdown:addChild(GUI.button(15, 11, 1, 1, 0xFFFFFF, 0x555555, 0xC4C4C4, 0xFFFFFF, blanka))
-logoutb.animated = false
-logoutb.onTouch = function()
-    shutdown:addChild(GUI.text(33, 13, 0x000000, "        "))
-    shutdown:addChild(GUI.text(33, 13, 0x000000, "Logout"))
-    workspace:draw()
-    modeset = "Logout"
 end
 
 local okay = shutdown:addChild(GUI.button(44, 13, 5, 1, 0xFFFFFF, 0x555555, 0xC4C4C4, 0xFFFFFF, "OK"))
