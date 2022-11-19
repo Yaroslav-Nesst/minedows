@@ -17,7 +17,7 @@ blanka = ("○")
 
 local workspace = GUI.workspace()
 
-local shutdown = workspace:addChild(GUI.titledWindow(50, 22, 60, 20, "Shut Down Minedows", true))
+local shutdown = workspace:addChild(GUI.titledWindow(50, 22, 60, 15, "Shut Down Minedows", true))
 shutdown:addChild(GUI.text(15, 5, 0x000000, "Are you sure you want to:"))
 shutdown:addChild(GUI.text(18, 7, 0x000000, "Shut down the computer?"))
 shutdown:addChild(GUI.text(18, 9, 0x000000, "Restart the computer?"))
