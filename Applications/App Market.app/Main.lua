@@ -154,7 +154,7 @@ local function RawAPIRequest(script, postData, notUnserialize)
 	local success, reason = internet.rawRequest(
 		host .. script .. ".php",
 		postData and internet.serialize(postData) or nil,
-		{["User-Agent"] = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.119 Safari/537.36"},
+		{["User-Agent"] = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/115.0"},
 		function(chunk)
 			data = data .. chunk
 			
