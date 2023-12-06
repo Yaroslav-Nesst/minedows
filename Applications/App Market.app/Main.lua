@@ -32,7 +32,6 @@ local localization = system.getLocalization(currentScriptDirectory .. "Localizat
 
 local categories = {
 	localization.categoryApplications,
-	localization.categoryLibraries,
 	localization.categoryScripts,
 }
 
@@ -43,7 +42,6 @@ local orderDirections = {
 
 local downloadPaths = {
 	paths.system.applications,
-	paths.system.libraries,
 	"/",
 }
 
