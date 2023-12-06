@@ -106,12 +106,18 @@ local function UIRequire(module)
 	end
 	
 	local title, width, total = "Minedows LUA", 26, 14
+	local efi1, width1, total1 = "Powered by OrangeCat Loader", 26, 14
 	local x, y, part = centrize(width), math.floor(screenHeight / 2 - 1), math.ceil(width * UIRequireCounter / UIRequireTotal)
 	UIRequireCounter = UIRequireCounter + 1
 	
 	-- Title
 	GPUProxy.setForeground(0xFF6347)
 	GPUProxy.set(centrize(#title), y, title)
+
+	-- EFI
+	GPUProxy.setForeground(0xFF6347)
+	GPUProxy.set(centrize(#efi1), y + 24, efi1)
+
 
 	-- Progressbar
 	GPUProxy.setForeground(0xD2691E)
