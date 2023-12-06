@@ -3,7 +3,7 @@
 	CPUArchitecture = "Архітектура процесора",
 	RAMControl = "Контроль оперативної пам'яті ",
 	packageUnloading = "Автоматичне розвантаження",
-	networkFTPNewConnection = "FTP-з'єднання",
+	networkFTPNewConnection = "Нове FTP-з'єднання",
 	networkFTPConnections = "FTP-підключення",
 	networkFTPAddress = "Адреса сервера",
 	networkFTPPort = "Порт сервера",
