@@ -1,5 +1,5 @@
 
-local stringsMain, stringsChangeLabel, stringKeyDown, stringsFilesystem, colorsTitle, colorsBackground, colorsText, colorsSelectionBackground, colorsSelectionText, componentProxy, componentList, pullSignal, uptime, tableInsert, mathMax, mathMin, mathHuge, mathFloor = "MineOS EFI", "Change label", "key_down", "filesystem", 0x2D2D2D, 0xE1E1E1, 0x878787, 0x878787, 0xE1E1E1, component.proxy, component.list, computer.pullSignal, computer.uptime, table.insert, math.max, math.min, math.huge, math.floor
+local stringsMain, stringsChangeLabel, stringKeyDown, stringsFilesystem, colorsTitle, colorsBackground, colorsText, colorsSelectionBackground, colorsSelectionText, componentProxy, componentList, pullSignal, uptime, tableInsert, mathMax, mathMin, mathHuge, mathFloor = "Powered by OrangeCat Loader", "Change label", "key_down", "filesystem", 0xFF6347, 0x000000, 0xD2691E, 0x433218, 0xA26A42, component.proxy, component.list, computer.pullSignal, computer.uptime, table.insert, math.max, math.min, math.huge, math.floor
 
 local eeprom, gpu, internetAddress = componentProxy(componentList("eeprom")()), componentProxy(componentList("gpu")()), componentList("internet")()
 
@@ -39,11 +39,11 @@ local OSList, rectangle, centrizedText, menuElement =
 	end
 
 local function title(y, titleText)
-	y = mathFloor(screenHeight / 2 - y / 2)
+	y = 48
 	rectangle(1, 1, screenWidth, screenHeight, colorsBackground)
 	centrizedText(y, colorsTitle, titleText)
 
-	return y + 2
+	return y - 25
 end
 
 local function status(titleText, statusText, needWait)
