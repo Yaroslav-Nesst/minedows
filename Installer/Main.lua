@@ -1,4 +1,3 @@
-
 -- Checking for required components
 local function getComponentAddress(name)
 	return component.list(name)() or error("Required " .. name .. " component is missing")
@@ -38,6 +37,24 @@ local function centrizedText(y, color, text)
 	GPUProxy.fill(1, y, screenWidth, 1, " ")
 	GPUProxy.setForeground(color)
 	GPUProxy.set(centrize(#text), y, text)
+end
+-- GPUProxy.setForeground(0xFFFFFF)
+-- GPUProxy.set(1, 1, "Booting Minedows")
+local statusline = 0
+local function status1(text, needWait)
+	if statusline > screenHeight then
+		statusline = 1
+		GPUProxy.setBackground(0x000000)
+		GPUProxy.fill(1, 1, screenWidth/2, screenHeight, " ")
+	end
+	statusline = statusline + 1
+	GPUProxy.setForeground(0xFFFFFF)
+	GPUProxy.set(1, statusline, text)
+	if needWait then
+		repeat
+			needWait = computer.pullSignal()
+		until needWait == "key_down" or needWait == "touch"
+	end
 end
 
 local function title()
@@ -144,31 +161,47 @@ end
 GPUProxy.setBackground(0x000000)
 GPUProxy.fill(1, 1, screenWidth, screenHeight, " ")
 
+status1("Booting kernel", false)
+
+status1("Searching for appropriate temporary fs", false)
 -- Searching for appropriate temporary filesystem for storing libraries, images, etc
 for address in component.list("filesystem") do
 	local proxy = component.proxy(address)
+	status1("fs "..proxy.spaceTotal(), false)
 	if proxy.spaceTotal() >= 2 * 1024 * 1024 then
 		temporaryFilesystemProxy, selectedFilesystemProxy = proxy, proxy
 		break
 	end
 end
 
+
 -- If there's no suitable HDDs found - then meow
 if not temporaryFilesystemProxy then
-	status("No drives found!", true)
+	status1("No drives found!", true)
 	return
 end
 
+status1("Getting file list", false)
 -- First, we need a big ass file list with localizations, applications, wallpapers
 progress(0)
 local files = deserialize(request(installerURL .. "Files.cfg"))
+local doDownload = 0
 
 -- After that we could download required libraries for installer from it
-for i = 1, #files.installerFiles do
-	progress(i / #files.installerFiles)
-	download(files.installerFiles[i], installerPath .. files.installerFiles[i])
+if 1 > 0 then
+	status1("doDownload is NOT 1, skipping...", false)
+
+
+else
+	for i = 1, #files.installerFiles do
+		status1("Downloading" .. files.installerFiles[i], false)
+		progress(i / #files.installerFiles)
+ 		download(files.installerFiles[i], installerPath .. files.installerFiles[i])
+		status1("Done" .. files.installerFiles[i], false)
+	end
 end
 
+status1("Initializing package system for system libraries", false)
 -- Initializing simple package system for loading system libraries
 package = {loading = {}, loaded = {}}
 
@@ -207,72 +240,100 @@ function require(module)
 end
 
 -- Initializing system libraries
+status1("Initializing system libraries", false)
+status1("Initializing filesystem.lua", false)
 local filesystem = require("Filesystem")
 filesystem.setProxy(temporaryFilesystemProxy)
 
+status1("Initializing bit32.lua", false)
 bit32 = bit32 or require("Bit32")
+status1("Initializing image.lua", false)
 local image = require("Image")
+status1("Initializing text.lua", false)
 local text = require("Text")
+status1("Initializing number.lua", false)
 local number = require("Number")
 
+status1("Initializing screen.lua", false)
 local screen = require("Screen")
+status1("Initializing GPUProxy", false)
 screen.setGPUProxy(GPUProxy)
 
+status1("Initializing filesystem.lua", false)
 local GUI = require("GUI")
+status1("Initializing system.lua", false)
 local system = require("System")
+status1("Initializing paths.lua", false)
 local paths = require("Paths")
+status1("All done, starting graphical environment...", false)
+
+
+
+
 
 --------------------------------------------------------------------------------
 
+
+
+
+
 -- Creating main UI workspace
 local workspace = GUI.workspace()
-workspace:addChild(GUI.panel(1, 1, workspace.width, workspace.height, 0x906FD0))
-workspace:addChild(GUI.text(3, 2, 0xFFFFFF, "ver-0.13"))
+workspace:addChild(GUI.panel(1, 1, workspace.width, workspace.height, 0x180052))
+workspace:addChild(GUI.text(3, 2, 0xFFFFFF, "ver-0.14"))
+
 
 -- Main installer window
-local window = workspace:addChild(GUI.window(1, 1, 80, 24))
+-- local window = workspace:addChild(GUI.window(1, 1, 80, 24))
+-- mainw = window:addChild(GUI.panel(1, 1, window.width, window.height, 0x180052))
+local window = workspace:addChild(GUI.titledWindow(1, 1, 80, 24, "Minedows Setup", true))
+local mainw = window:addChild(GUI.container(1, 1, window.width, window.height))
+--local mainw = window:addChild(GUI.innerwindow(1, 1, window.width, window.height, 0x180052))
 window.localX, window.localY = math.ceil(workspace.width / 2 - window.width / 2), math.ceil(workspace.height / 2 - window.height / 2)
-window:addChild(GUI.panel(1, 1, window.width, window.height, 0xE1E1E1))
 
--- Top menu
-local menu = workspace:addChild(GUI.menu(1, 1, workspace.width, 0xf0f0f0, 0xf0f0f0, 0x3366CC, 0xe1e1e1))
-local installerMenu = menu:addContextMenuItem("Start", 0x2D2D2D)
-installerMenu:addItem("").onTouch = function()
-	computer.shutdown()
-end
-installerMenu:addItem("Shutdown").onTouch = function()
-	computer.shutdown()
-end
-installerMenu:addItem("").onTouch = function()
-	computer.shutdown()
-end
-
-installerMenu:addItem("").onTouch = function()
-	computer.shutdown(true)
-end
-installerMenu:addItem("Reboot").onTouch = function()
-	computer.shutdown(true)
-end
-installerMenu:addItem("").onTouch = function()
+window.actionButtons.close.onTouch = function()
 	computer.shutdown(true)
 end
 
-installerMenu:addSeparator()
-installerMenu:addItem("").onTouch = function()
+local function runWindow()
+	local run = workspace:addChild(GUI.titledWindow(1, 1, 60, 12, "Run", true))
+	run:addChild(GUI.text(15, 3, 0x000000, "Type name of a program, and"))
+	run:addChild(GUI.text(15, 4, 0x000000, "Minedows will open it for you"))
+	run:addChild(GUI.text(4, 9, 0x000000, "Open:"))
+	run:addChild(GUI.image(4, 3, image.load("/Temp/Installer/Pictures/Pc.pic")))
+
+	run.actionButtons.close.onTouch = function()
+		run:remove()
+		workspace:draw()
+	end
+
+	local rued = run:addChild(GUI.input(15, 9, 30, 1, 0xc4c4c4, 0x555555, 0x999999, 0xC4C4C4, 0x2D2D2D))
+	rued.onInputFinished = function()
+	  patx = rued.text
+	end
+
+	local okay = run:addChild(GUI.button(40, 11, 5, 1, 0xFFFFFF, 0x555555, 0xC4C4C4, 0xFFFFFF, "Run"))
+	okay.animated = false
+	okay.onTouch = function()
+	  system.execute(patx)
+
+	if rued == nil and patx == nil then
+	  GUI.alert("File is nil or not found!")
+	end
+	end
 end
-installerMenu:addItem("Exit").onTouch = function()
-	system.execute("Temp/lib/shutdownmenu.lua")
-end
-installerMenu:addItem("").onTouch = function()
-	system.execute("Temp/lib/shutdownmenu.lua")
+
+local runButton = workspace:addChild(GUI.button(4, 4, 6, 1, 0xFFFFFF, 0x555555, 0x880000, 0xFFFFFF, "Run"))
+runButton.onTouch = function()
+	runWindow()
 end
 
 -- Main vertical layout
 local layout = window:addChild(GUI.layout(1, 1, window.width, window.height - 2, 1, 1))
 
-local stageButtonsLayout = window:addChild(GUI.layout(1, window.height - 1, window.width, 1, 1, 1))
-stageButtonsLayout:setDirection(1, 1, GUI.DIRECTION_HORIZONTAL)
-stageButtonsLayout:setSpacing(1, 1, 3)
+-- local stageButtonsLayout = window:addChild(GUI.layout(1, window.height - 2, window.width, 3, 1, 1))
+-- stageButtonsLayout:setDirection(1, 1, GUI.DIRECTION_HORIZONTAL)
+-- stageButtonsLayout:setSpacing(1, 1, 3)
 
 local function loadImage(name)
 	return image.load(installerPicturesPath .. name .. ".pic")
@@ -287,30 +348,50 @@ local function newSwitchAndLabel(width, color, text, state)
 end
 
 local function addTitle(color, text)
-	return layout:addChild(GUI.text(1, 1, color, text))
+	return mainw:addChild(GUI.text(1, 1, color, text))
 end
 
 local function addImage(before, after, name)
 	if before > 0 then
-		layout:addChild(GUI.object(1, 1, 1, before))
+		mainw:addChild(GUI.object(1, 1, 1, before))
 	end
 
-	local picture = layout:addChild(GUI.image(1, 1, loadImage(name)))
+	local picture = mainw:addChild(GUI.image(1, 1, loadImage(name)))
 	picture.height = picture.height + after
 
 	return picture
 end
 
-local function addStageButton(text)
-	local button = stageButtonsLayout:addChild(GUI.adaptiveRoundedButton(1, 1, 2, 0, 0xC3C3C3, 0x878787, 0xA5A5A5, 0x696969, text))
-	button.colors.disabled.background = 0xD2D2D2
-	button.colors.disabled.text = 0xB4B4B4
+local function addImage1(x, y, before, after, name)
+	if before > 0 then
+		mainw:addChild(GUI.object(1, 1, 1, before))
+	end
 
-	return button
+	local picture = mainw:addChild(GUI.image(x, y, loadImage(name)))
+	picture.height = picture.height + after
+
+	return picture
 end
 
-local prevButton = addStageButton("<")
-local nextButton = addStageButton(">")
+--local function addStageButton(text)
+--	local button = stageButtonsLayout:addChild(GUI.adaptiveFramedButton(1, 1, 2, 1, 0xC3C3C3, 0x878787, 0xA5A5A5, 0x696969, text))
+--
+-- local button = stageButtonsLayout:addChild(GUI.adaptiveRoundedButton(1, 1, 2, 0, 0xC3C3C3, 0x878787, 0xA5A5A5, 0x696969, text))
+--	button.colors.disabled.background = 0xD2D2D2
+--	button.colors.disabled.text = 0xB4B4B4
+--
+--	return button
+--end
+
+-- local prevButton = addStageButton("Back")
+-- local nextButton = addStageButton("Next")
+local prevButton = window:addChild(GUI.adaptiveFramedButton(window.width - 18, window.height - 2, 2, 1, 0xC3C3C3, 0x878787, 0xA5A5A5, 0x696969, "Back"))
+prevButton.colors.disabled.background = 0xD2D2D2
+prevButton.colors.disabled.text = 0xB4B4B4
+
+local nextButton = window:addChild(GUI.adaptiveFramedButton(window.width - 8, window.height - 2, 2, 1, 0xC3C3C3, 0x878787, 0xA5A5A5, 0x696969, "Next"))
+nextButton.colors.disabled.background = 0xD2D2D2
+nextButton.colors.disabled.text = 0xB4B4B4
 
 local localization
 local stage = 1
@@ -329,28 +410,11 @@ local localizationsSwitchAndLabel = newSwitchAndLabel(30, 0x33B6FF, "", true)
 
 local acceptSwitchAndLabel = newSwitchAndLabel(30, 0x9949FF, "", false)
 
-local localizationComboBox = GUI.comboBox(1, 1, 22, 1, 0xF0F0F0, 0x969696, 0xD2D2D2, 0xB4B4B4)
-for i = 1, #files.localizations do
-	localizationComboBox:addItem(filesystemHideExtension(filesystemName(files.localizations[i]))).onTouch = function()
-		-- Obtaining localization table
-		localization = deserialize(request(installerURL .. files.localizations[i]))
-
-		-- Filling widgets with selected localization data
-		usernameInput.placeholderText = localization.username
-		passwordInput.placeholderText = localization.password
-		passwordSubmitInput.placeholderText = localization.submitPassword
-		passwordSwitchAndLabel.label.text = localization.withoutPassword
-		wallpapersSwitchAndLabel.label.text = localization.wallpapers
-		screensaversSwitchAndLabel.label.text = localization.screensavers
-		applicationsSwitchAndLabel.label.text = localization.applications
-		localizationsSwitchAndLabel.label.text = localization.languages
-		acceptSwitchAndLabel.label.text = localization.accept
-	end
-end
+local localizationStart = GUI.text(1, 2, 0xCC0040, "Language to install:")
 
 local function addStage(onTouch)
 	table.insert(stages, function()
-		layout:removeChildren()
+		mainw:removeChildren()
 		onTouch()
 		workspace:draw()
 	end)
@@ -424,9 +488,29 @@ passwordSubmitInput.onInputFinished = usernameInput.onInputFinished
 -- Localization selection stage
 addStage(function()
 	prevButton.disabled = true
+	local localizationComboBox = GUI.comboBox(40, 14, 22, 1, 0xF0F0F0, 0x969696, 0xD2D2D2, 0xB4B4B4)
+	for i = 1, #files.localizations do
+		localizationComboBox:addItem(filesystemHideExtension(filesystemName(files.localizations[i]))).onTouch = function()
+		-- Obtaining localization table
+		localization = deserialize(request(installerURL .. files.localizations[i]))
 
-	addImage(0, 1, "Languages")
-	layout:addChild(localizationComboBox)
+		-- Filling widgets with selected localization data
+		usernameInput.placeholderText = localization.username
+		passwordInput.placeholderText = localization.password
+		passwordSubmitInput.placeholderText = localization.submitPassword
+		passwordSwitchAndLabel.label.text = localization.withoutPassword
+		wallpapersSwitchAndLabel.label.text = localization.wallpapers
+		screensaversSwitchAndLabel.label.text = localization.screensavers
+		applicationsSwitchAndLabel.label.text = localization.applications
+		localizationsSwitchAndLabel.label.text = localization.languages
+		acceptSwitchAndLabel.label.text = localization.accept
+		end
+	end
+
+	addImage1(16, 5, 0, 0, "Logo")
+
+	mainw:addChild(localizationComboBox)
+	mainw:addChild(GUI.text(20, 14, 0xCC0040, "Language to install:"))
 
 	workspace:draw()
 	localizationComboBox:getItem(1).onTouch()
@@ -437,10 +521,10 @@ addStage(function()
 	prevButton.disabled = false
 	nextButton.disabled = false
 
-	layout:addChild(GUI.object(1, 1, 1, 1))
+	mainw:addChild(GUI.object(5, 5, 1, 1))
 	addTitle(0x696969, localization.select)
 	
-	local diskLayout = layout:addChild(GUI.layout(1, 1, layout.width, 11, 1, 1))
+	local diskLayout = mainw:addChild(GUI.layout(1, 2, layout.width, 11, 1, 1))
 	diskLayout:setDirection(1, 1, GUI.DIRECTION_HORIZONTAL)
 	diskLayout:setSpacing(1, 1, 0)
 
@@ -464,7 +548,6 @@ addStage(function()
 
 		local function addDisk(proxy, picture, disabled)
 			local disk = diskLayout:addChild(GUI.container(1, 1, 14, diskLayout.height))
-
 			local formatContainer = disk:addChild(GUI.container(1, 1, disk.width, disk.height))
 			formatContainer:addChild(GUI.panel(1, 1, formatContainer.width, formatContainer.height, 0xD2D2D2))
 			formatContainer:addChild(GUI.button(1, formatContainer.height, formatContainer.width, 1, 0xCC4940, 0xE1E1E1, 0x990000, 0xE1E1E1, localization.erase)).onTouch = function()
@@ -519,11 +602,11 @@ addStage(function()
 	addImage(0, 0, "User")
 	addTitle(0x696969, localization.setup)
 
-	layout:addChild(usernameInput)
-	layout:addChild(passwordInput)
-	layout:addChild(passwordSubmitInput)
-	layout:addChild(usernamePasswordText)
-	layout:addChild(passwordSwitchAndLabel)
+	mainw:addChild(usernameInput)
+	mainw:addChild(passwordInput)
+	mainw:addChild(passwordSubmitInput)
+	mainw:addChild(usernamePasswordText)
+	mainw:addChild(passwordSwitchAndLabel)
 end)
 
 -- Downloads customization stage
@@ -554,7 +637,7 @@ addStage(function()
 	stageButtonsLayout:removeChildren()
 	
 	-- Creating user profile
-	layout:removeChildren()
+	mainw:removeChildren()
 	addImage(1, 1, "User")
 	addTitle(0x969696, localization.creating)
 	workspace:draw()
