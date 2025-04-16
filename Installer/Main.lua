@@ -185,14 +185,27 @@ status1("Getting file list", false)
 -- First, we need a big ass file list with localizations, applications, wallpapers
 progress(0)
 local files = deserialize(request(installerURL .. "Files.cfg"))
-local doDownload = 0
+local doDownload = true
 
 -- After that we could download required libraries for installer from it
-if 1 > 0 then
-	status1("doDownload is NOT 1, skipping...", false)
 
-
+if doDownload then
+ 
+	for i = 1, #files.installerFiles do
+ 
+		status1("Downloading" .. files.installerFiles[i], false)
+ 
+		progress(i / #files.installerFiles)
+ 
+ 		download(files.installerFiles[i], installerPath .. files.installerFiles[i])
+ 
+		status1("Done" .. files.installerFiles[i], false)
+ 
+	end
 else
+	status1("doDownload is false, skipping...", false)
+ 
+end
 	for i = 1, #files.installerFiles do
 		status1("Downloading" .. files.installerFiles[i], false)
 		progress(i / #files.installerFiles)
