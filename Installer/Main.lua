@@ -185,20 +185,20 @@ status1("Getting file list", false)
 -- First, we need a big ass file list with localizations, applications, wallpapers
 progress(0)
 local files = deserialize(request(installerURL .. "Files.cfg"))
-local doDownload = true
+local doDownload = 0
 
 -- After that we could download required libraries for installer from it
-if doDownload then
+if 1 > 0 then
+	status1("doDownload is NOT 1, skipping...", false)
+
+
+else
 	for i = 1, #files.installerFiles do
 		status1("Downloading" .. files.installerFiles[i], false)
 		progress(i / #files.installerFiles)
  		download(files.installerFiles[i], installerPath .. files.installerFiles[i])
 		status1("Done" .. files.installerFiles[i], false)
 	end
-
-
-else
-	status1("doDownload is false, skipping...", false)
 end
 
 status1("Initializing package system for system libraries", false)
@@ -353,10 +353,10 @@ end
 
 local function addImage(before, after, name)
 	if before > 0 then
-		mainw:addChild(GUI.object(1, 1, 1, before))
+		layout:addChild(GUI.object(1, 1, 1, before))
 	end
 
-	local picture = mainw:addChild(GUI.image(1, 1, loadImage(name)))
+	local picture = layout:addChild(GUI.image(1, 1, loadImage(name)))
 	picture.height = picture.height + after
 
 	return picture
@@ -415,6 +415,7 @@ local localizationStart = GUI.text(1, 2, 0xCC0040, "Language to install:")
 local function addStage(onTouch)
 	table.insert(stages, function()
 		mainw:removeChildren()
+		layout:removeChildren()
 		onTouch()
 		workspace:draw()
 	end)
@@ -602,11 +603,11 @@ addStage(function()
 	addImage(0, 0, "User")
 	addTitle(0x696969, localization.setup)
 
-	mainw:addChild(usernameInput)
-	mainw:addChild(passwordInput)
-	mainw:addChild(passwordSubmitInput)
-	mainw:addChild(usernamePasswordText)
-	mainw:addChild(passwordSwitchAndLabel)
+	layout:addChild(usernameInput)
+	layout:addChild(passwordInput)
+	layout:addChild(passwordSubmitInput)
+	layout:addChild(usernamePasswordText)
+	layout:addChild(passwordSwitchAndLabel)
 end)
 
 -- Downloads customization stage
