@@ -190,28 +190,15 @@ local doDownload = true
 -- After that we could download required libraries for installer from it
 
 if doDownload then
- 
 	for i = 1, #files.installerFiles do
- 
 		status1("Downloading" .. files.installerFiles[i], false)
- 
 		progress(i / #files.installerFiles)
- 
  		download(files.installerFiles[i], installerPath .. files.installerFiles[i])
- 
 		status1("Done" .. files.installerFiles[i], false)
- 
 	end
 else
 	status1("doDownload is false, skipping...", false)
  
-end
-	for i = 1, #files.installerFiles do
-		status1("Downloading" .. files.installerFiles[i], false)
-		progress(i / #files.installerFiles)
- 		download(files.installerFiles[i], installerPath .. files.installerFiles[i])
-		status1("Done" .. files.installerFiles[i], false)
-	end
 end
 
 status1("Initializing package system for system libraries", false)
