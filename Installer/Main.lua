@@ -185,7 +185,7 @@ status1("Getting file list", false)
 -- First, we need a big ass file list with localizations, applications, wallpapers
 progress(0)
 local files = deserialize(request(installerURL .. "Files.cfg"))
-local doDownload = 0
+local doDownload = 1
 
 -- After that we could download required libraries for installer from it
 if 1 > 0 then
