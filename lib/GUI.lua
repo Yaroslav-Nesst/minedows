@@ -886,12 +886,12 @@ end
 --------------------------------------------------------------------------------
 
 function GUI.actionButtons(x, y, fatSymbol)
-	local symbol = "●"
+	local symbol = "x"
 	
-	local container = GUI.container(x, y, 5, 1)
-	container.close = container:addChild(GUI.button(1, 1, 1, 1, nil, 0xFF4940, nil, 0x992400, symbol))
-	container.minimize = container:addChild(GUI.button(3, 1, 1, 1, nil, 0xFFB640, nil, 0x996D00, symbol))
-	container.maximize = container:addChild(GUI.button(5, 1, 1, 1, nil, 0x00B640, nil, 0x006D40, symbol))
+	local container = GUI.container(x, y, 11, 1)
+	container.close = container:addChild(GUI.button(9, 1, 3, 1, 0x727272, 0xFFFFFF, 0x464646, 0xFFFFFF, "x"))
+	container.minimize = container:addChild(GUI.button(1, 1, 3, 1, 0x727272, 0xFFFFFF, 0x464646, 0xFFFFFF, "-"))
+	container.maximize = container:addChild(GUI.button(5, 1, 3, 1, 0x727272, 0xFFFFFF, 0x464646, 0xFFFFFF, "□"))
 
 	return container
 end
@@ -4516,7 +4516,7 @@ function GUI.filledWindow(x, y, width, height, backgroundColor, transparency)
 	local window = GUI.window(x, y, width, height)
 
 	window.backgroundPanel = window:addChild(GUI.panel(1, 1, width, height, backgroundColor, transparency))
-	window.actionButtons = window:addChild(GUI.actionButtons(2, 2, true))
+	window.actionButtons = window:addChild(GUI.actionButtons(window.width-11, 2, true))
 
 	return window
 end
@@ -4529,7 +4529,7 @@ function GUI.titledWindow(x, y, width, height, title, addTitlePanel)
 		window.backgroundPanel.localY, window.backgroundPanel.height = 2, window.height - 1
 	end
 
-	window.titleLabel = window:addChild(GUI.label(1, 1, width, height, GUI.WINDOW_TITLE_TEXT_COLOR, title)):setAlignment(GUI.ALIGNMENT_HORIZONTAL_CENTER, GUI.ALIGNMENT_VERTICAL_TOP)
+	window.titleLabel = window:addChild(GUI.label(1, 1, width, height, GUI.WINDOW_TITLE_TEXT_COLOR, title)):setAlignment(GUI.ALIGNMENT_HORIZONTAL_LEFT, GUI.ALIGNMENT_VERTICAL_TOP)
 	window.actionButtons.localY = 1
 	window.actionButtons:moveToFront()
 
@@ -4543,7 +4543,7 @@ function GUI.tabbedWindow(x, y, width, height, ...)
 	
 	window.backgroundPanel.localY, window.backgroundPanel.height = 4, window.height - 3
 	window.actionButtons:moveToFront()
-	window.actionButtons.localY = 2
+	window.actionButtons.localY = 1
 
 	return window
 end
@@ -4876,52 +4876,5 @@ function GUI.table(x, y, width, height, itemHeight, backgroundColor, headerBackg
 
 	return table
 end
-
----------------------------------------------------------------------------------------------------
-
--- local workspace = GUI.workspace()
-
--- workspace:addChild(GUI.panel(1, 1, workspace.width, workspace.height, 0x2D2D2D))
-
--- local t = workspace:addChild(GUI.table(3, 2, 80, 30, 1,
--- 	0xF0F0F0,
--- 	0xFFFFFF,
--- 	0x000000
--- ))
-
--- t:addColumn("Name", GUI.SIZE_POLICY_RELATIVE, 0.6)
--- t:addColumn("Date", GUI.SIZE_POLICY_RELATIVE, 0.4)
--- t:addColumn("Size", GUI.SIZE_POLICY_ABSOLUTE, 16)
--- t:addColumn("Type", GUI.SIZE_POLICY_ABSOLUTE, 10)
-
--- local colors1 = {
--- 	defaultBackground = nil,
--- 	defaultText = 0x3C3C3C,
--- 	alternativeBackground = 0xE1E1E1,
--- 	alternativeText = 0x3C3C3C,
--- 	selectionBackground = 0xCC2440,
--- 	selectionText = 0xFFFFFF,
--- }
-
--- local colors2 = {}
--- for key, value in pairs(colors1) do
--- 	colors2[key] = value
--- end
--- colors2.defaultText, colors2.alternativeText = 0xA5A5A5, 0xA5A5A5
-
--- for i = 1, 10 do
--- 	t:addRow(
--- 		GUI.tableTextCell(colors1, "Ehehehe " .. i),
--- 		GUI.tableTextCell(colors2, "12.02.2018"),
--- 		GUI.tableTextCell(colors2, "114.23 KB"),
--- 		GUI.tableTextCell(colors2, ".lua")
--- 	)
--- end
-
--- workspace:draw()
--- workspace:start()
-
-
----------------------------------------------------------------------------------------------------
 
 return GUI
