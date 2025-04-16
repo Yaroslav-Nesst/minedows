@@ -1,5 +1,4 @@
-
-local stringsMain, stringsChangeLabel, stringKeyDown, stringsFilesystem, colorsTitle, colorsBackground, colorsText, colorsSelectionBackground, colorsSelectionText, componentProxy, componentList, pullSignal, uptime, tableInsert, mathMax, mathMin, mathHuge, mathFloor = "Powered by OrangeCat Loader", "Change label", "key_down", "filesystem", 0xFF6347, 0x000000, 0xD2691E, 0x433218, 0xA26A42, component.proxy, component.list, computer.pullSignal, computer.uptime, table.insert, math.max, math.min, math.huge, math.floor
+local strMain, strChangeLbl, strKD, strFS, colorsTitle, colorsBG, colorsText, colorsSelectBG, colorsSelectText, componentProxy, componentList, pullSignal, uptime, tableInsert, mathMax, mathMin, mathHuge, mathFloor, statusline = "OrangeCat Loader", "Change label", "key_down", "filesystem", 0xFF6347, 0x000000, 0xD2691E, 0x433218, 0xA26A42, component.proxy, component.list, computer.pullSignal, computer.uptime, table.insert, math.max, math.min, math.huge, math.floor,0
 
 local eeprom, gpu, internetAddress = componentProxy(componentList("eeprom")()), componentProxy(componentList("gpu")()), componentList("internet")()
 
@@ -7,7 +6,7 @@ gpu.bind(componentList("screen")(), true)
 
 local shutdown, gpuSet, gpuSetBackground, gpuSetForeground, gpuFill, eepromSetData, eepromGetData, screenWidth, screenHeight = computer.shutdown, gpu.set, gpu.setBackground, gpu.setForeground, gpu.fill, eeprom.setData, eeprom.getData, gpu.getResolution()
 
-local OSList, rectangle, centrizedText, menuElement =
+local OSList, rectangle, centrizedText, consoleText, menuElement =
 	{
 		{
 			"/init.lua",
@@ -30,6 +29,16 @@ local OSList, rectangle, centrizedText, menuElement =
 		gpuSetForeground(foreground)
 		gpuSet(x, y, text)
 	end,
+	function(text)
+		if statusline > screenHeight then
+			statusline = 1
+			gpuSetBackground(0x000000)
+			gpuFill(1, 1, screenWidth/2, screenHeight, " ")
+		end
+		statusline = statusline + 1
+		gpuSetForeground(0xFFFFFF)
+		gpuSet(1, statusline, text)
+	end,
 	function(text, callback, breakLoop)
 		return {
 			s = text,
@@ -40,29 +49,32 @@ local OSList, rectangle, centrizedText, menuElement =
 
 local function title(y, titleText)
 	y = 48
-	rectangle(1, 1, screenWidth, screenHeight, colorsBackground)
+	rectangle(screenWidth/2-25, 1, screenWidth, screenHeight, colorsBG)
+--	rectangle(mathFloor(screenWidth/2-10), mathFloor(screenHeight/2-10), 20, 20, colorsBG)
 	centrizedText(y, colorsTitle, titleText)
 
 	return y - 25
 end
 
-local function status(titleText, statusText, needWait)
+local function status(titleText, statusText, needWait, cons)
 	local lines = {}
-	for line in statusText:gmatch("[^\r\n]+") do
-		lines[#lines + 1] = line:gsub("\t", "  ")
-	end
-	
 	local y = title(#lines, titleText)
-	
-	for i = 1, #lines do
-		centrizedText(y, colorsText, lines[i])
-		y = y + 1
+	if cons then
+		consoleText(statusText)
+	else
+		for line in statusText:gmatch("[^\r\n]+") do
+			lines[#lines + 1] = line:gsub("\t", "  ")
+		end
+		for i = 1, #lines do
+			centrizedText(y, colorsText, lines[i])
+			y = y + 1
+		end
 	end
 
 	if needWait then
 		repeat
 			needWait = pullSignal()
-		until needWait == stringKeyDown or needWait == "touch"
+		until needWait == strKD or needWait == "touch"
 	end
 end
 
@@ -75,14 +87,14 @@ local function executeString(...)
 		end
 	end
 
-	status(stringsMain, reason, 1)
+	status(strMain, reason, false,true)
 end
 
 local boot, menuBack, menu, input =
 	function(proxy)
 		for i = 1, #OSList do
 			if proxy.exists(OSList[i][1]) then
-				status(stringsMain, "Booting from... " .. (proxy.getLabel() or proxy.address))
+				status(strMain, "Booting from " .. (proxy.getLabel() or proxy.address),false,true)
 
 				-- Updating current EEPROM boot address if it's differs from given proxy address
 				if eepromGetData() ~= proxy.address then
@@ -124,10 +136,10 @@ local boot, menuBack, menu, input =
 				x = mathFloor(screenWidth / 2 - #elements[i].s / 2)
 				
 				if i == selectedElement then
-					rectangle(mathFloor(screenWidth / 2 - maxLength / 2) - 2, y, maxLength + 4, 1, colorsSelectionBackground)
-					gpuSetForeground(colorsSelectionText)
+					rectangle(mathFloor(screenWidth / 2 - maxLength / 2) - 2, y, maxLength + 4, 1, colorsSelectBG)
+					gpuSetForeground(colorsSelectText)
 					gpuSet(x, y, elements[i].s)
-					gpuSetBackground(colorsBackground)
+					gpuSetBackground(colorsBG)
 				else
 					gpuSetForeground(colorsText)
 					gpuSet(x, y, elements[i].s)
@@ -137,7 +149,7 @@ local boot, menuBack, menu, input =
 			end
 
 			eventData = {pullSignal()}
-			if eventData[1] == stringKeyDown then
+			if eventData[1] == strKD then
 				if eventData[4] == 200 and selectedElement > 1 then
 					selectedElement = selectedElement - 1
 				elseif eventData[4] == 208 and selectedElement < #elements then
@@ -159,11 +171,12 @@ local boot, menuBack, menu, input =
 		while 1 do
 			eblo = prefix .. text
 			gpuFill(1, y, screenWidth, 1, " ")
+			-- rectangle(mathFloor(screenWidth/2-10), 1, 20, screenHeight, colorsBG)
 			gpuSetForeground(colorsText)
 			gpuSet(mathFloor(screenWidth / 2 - #eblo / 2), y, eblo .. (state and "█" or ""))
 
 			eventData = {pullSignal(0.5)}
-			if eventData[1] == stringKeyDown then
+			if eventData[1] == strKD then
 				if eventData[4] == 28 then
 					return text
 				elseif eventData[4] == 14 then
@@ -184,14 +197,14 @@ local boot, menuBack, menu, input =
 		end
 	end
 
-status(stringsMain, "Press ALT to enter recovery!")
+status(strMain, "Press ALT to enter recovery!",false,true)
 
 local deadline, eventData = uptime() + 1
 while uptime() < deadline do
 	eventData = {pullSignal(deadline - uptime())}
-	if eventData[1] == stringKeyDown and eventData[4] == 56 then
+	if eventData[1] == strKD and eventData[4] == 56 then
 		local utilities = {
-			menuElement("Partitions manager", function()
+			menuElement("Partitions", function()
 				local restrict, filesystems, filesystemOptions =
 					function(text, limit)
 						if #text < limit then
@@ -209,7 +222,7 @@ while uptime() < deadline do
 						table.remove(filesystems, 1)
 					end
 
-					for address in componentList(stringsFilesystem) do
+					for address in componentList(strFS) do
 						local proxy = componentProxy(address)
 						local label, isReadOnly, filesystemOptions =
 							proxy.getLabel() or "noname",
@@ -222,13 +235,13 @@ while uptime() < deadline do
 							}
 
 						if not isReadOnly then
-							tableInsert(filesystemOptions, menuElement(stringsChangeLabel, function()
-								proxy.setLabel(input(title(2, stringsChangeLabel), "Enter new name: "))
+							tableInsert(filesystemOptions, menuElement(strChangeLbl, function()
+								proxy.setLabel(input(title(2, strChangeLbl), "Enter new name: "))
 								updateFilesystems()
 							end, 1))
 
-							tableInsert(filesystemOptions, menuElement("Format Tool", function()
-								status(stringsMain, "Formatting drive " .. address)
+							tableInsert(filesystemOptions, menuElement("Format", function()
+								status(strMain, "Formatting " .. address,false,true)
 								
 								for _, file in ipairs(proxy.list("/")) do
 									proxy.remove(file)
@@ -272,7 +285,7 @@ while uptime() < deadline do
 				local handle, data, result, reason = componentProxy(internetAddress).request("https://raw.githubusercontent.com/Yaroslav-Nesst/minedows/master/Installer/Main.lua"), ""
 
 				if handle then
-					status(stringsMain, "Running recovery script...")
+					status(strMain, "Running recovery script...",false,true)
 
 					while 1 do
 						result, reason = handle.read(mathHuge)	
@@ -283,7 +296,7 @@ while uptime() < deadline do
 							handle.close()
 							
 							if reason then
-								status(stringsMain, reason, 1)
+								status(strMain, reason, true,true)
 							else
 								executeString(data, "=string")
 							end
@@ -292,18 +305,18 @@ while uptime() < deadline do
 						end
 					end
 				else
-					status(stringsMain, "Invalid URL-adress", 1)
+					status(strMain, "Invalid URL-adress", true,true)
 				end
 			end))
 		end
 
-		menu(stringsMain, utilities)
+		menu(strMain, utilities)
 	end
 end
 
 local proxy = componentProxy(eepromGetData())
 if not (proxy and boot(proxy)) then
-	for address in componentList(stringsFilesystem) do
+	for address in componentList(strFS) do
 		proxy = componentProxy(address)
 
 		if boot(proxy) then
@@ -314,7 +327,7 @@ if not (proxy and boot(proxy)) then
 	end
 
 	if not proxy then
-		status(stringsMain, "No os/init.lua found :( Lox, proyebal sistemy", 1)
+		status(strMain, "No os/init.lua found.", true,true)
 	end
 end
 
